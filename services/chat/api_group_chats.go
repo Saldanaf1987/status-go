@@ -129,6 +129,16 @@ func (api *API) RenameChat(ctx context.Context, communityID types.HexBytes, chat
 	})
 }
 
+func (api *API) EditChat(ctx context.Context, communityID types.HexBytes, chatID string, name string, color string, image string) (*GroupChatResponse, error) {
+	if len(communityID) != 0 {
+		return nil, ErrCommunitiesNotSupported
+	}
+
+	return api.execAndGetGroupChatResponse(func() (*protocol.MessengerResponse, error) {
+		return api.s.messenger.EditGroupChat(ctx, chatID, name, color, image)
+	})
+}
+
 func (api *API) SendGroupChatInvitationRequest(ctx context.Context, communityID types.HexBytes, chatID string, adminPK string, message string) (*GroupChatResponseWithInvitations, error) {
 	if len(communityID) != 0 {
 		return nil, ErrCommunitiesNotSupported
